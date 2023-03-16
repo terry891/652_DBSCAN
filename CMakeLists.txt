@@ -3,6 +3,7 @@ PROJECT(HPDBSCAN)
 
 # include additional modules
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/)
+set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} /usr/local/lib/python3.10/dist-packages/numpy/core/include)
 
 # set c++ properties
 ENABLE_LANGUAGE(CXX)
@@ -58,7 +59,7 @@ IF(SWIG_FOUND)
             MESSAGE("TRY INSTALLING THE python-dev OR python-devel PACKAGE")
         ELSE()
             INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
-	    FIND_PACKAGE(NumPy)
+	    FIND_PACKAGE(NUMPY)
 	    IF(NUMPY_FOUND)
 		EXECUTE_PROCESS(COMMAND swig -c++ -python -I"${PYTHON_INCLUDE_DIRS}" -I"${NUMPY_INCLUDE_DIRS}" -o "${CMAKE_CURRENT_BINARY_DIR}/hpdbscan_wrap.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/swig/hpdbscan.i")
                 ADD_LIBRARY(hpdbscan-binding SHARED ${CMAKE_CURRENT_BINARY_DIR}/hpdbscan_wrap.cpp)
