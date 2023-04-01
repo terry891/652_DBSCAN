@@ -6,9 +6,10 @@ import sys
 import time
 
 DATASET_PARAMETERS = {# eps,  min_points
-    #'bremen_small.h5':  (100,  312),
-    'iris.h5':          (0.32,  3),
-    #'twitter_small.h5': (0.01, 40),
+    #'bremen_small.h5':     (100,  312),
+    'iris.h5':              (0.32,  3),
+    #'twitter_small.h5':    (0.01, 40),
+    #'test1.h5':            (0.01, 40),
 }
 TRIALS = 10
 
@@ -38,4 +39,5 @@ def run_benchmark(command, log_path):
 if __name__ == '__main__':
     run_benchmark('./sklearn-dbscan.py {dataset} -e {eps} -m {min_points}', 'sklearn.log')
     run_benchmark('../build/hpdbscan -i {dataset} --input-dataset DBSCAN -o output.h5 --output-dataset CLUSTERS -e {eps} -m {min_points}', 'hpdbscan.log')
+    
 
