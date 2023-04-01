@@ -14,7 +14,7 @@ x = np.vstack(x)
 np.random.shuffle(x)
 
 with h5py.File(filename, "w") as data_file:
-    data_file.create_dataset("dataset_name", data=x, dtype='float32')
+    data_file.create_dataset("DBSCAN", data=x, dtype='float32')
 
 print(x.shape)
 
