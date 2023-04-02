@@ -7,10 +7,10 @@ set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} /usr/local/lib/python3.10/dist-pa
 
 # set c++ properties
 ENABLE_LANGUAGE(CXX)
-SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD 14)
 
 # set build options
-SET(CMAKE_CXX_FLAGS "-Ofast -Wall -Wextra")
+SET(CMAKE_CXX_FLAGS "-Ofast -Wall -Wextra -pthread")
 SET(CMAKE_CXX_FLAGS_DEBUG "-g")
 
 # add the include and source directories
@@ -22,6 +22,11 @@ ADD_LIBRARY(hpdbscan SHARED src/hpdbscan.cpp)
 # set up the cli executable
 ADD_EXECUTABLE(hpdbscan-bin src/cli.cpp)
 
+FIND_PACKAGE(Threads REQUIRED)
+IF(Threads_FOUND)
+  Message("BUILDING with pthreads")
+ENDIF()
+#TARGET_LINK_OPTIONS(hpdbscan-bin PRIVATE Threads::Threads)
 # define options
 TARGET_COMPILE_DEFINITIONS(hpdbscan-bin PRIVATE WITH_OUTPUT)
 
