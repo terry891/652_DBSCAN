@@ -39,6 +39,8 @@
 #include "rules.h"
 #include "spatial_index.h"
 
+#include "cover_tree.h"
+
 class HPDBSCAN {
     float m_epsilon;
     size_t m_min_points;
