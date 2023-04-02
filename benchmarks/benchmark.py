@@ -7,9 +7,9 @@ import time
 
 DATASET_PARAMETERS = {# eps,  min_points
     #'bremen_small.h5':     (100,  312),
-    #'iris.h5':              (0.32,  3),
+    'iris.h5':              (0.32,  3),
     #'twitter_small.h5':    (0.01, 40),
-    'test1.h5':            (0.01, 40),
+    #'test1.h5':            (0.01, 40),
 }
 TRIALS = 10
 
