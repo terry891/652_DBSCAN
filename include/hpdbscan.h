@@ -362,6 +362,7 @@ public:
         #ifdef WITH_OUTPUT
         double execution_start = omp_get_wtime();
         #endif
+        threads = 1;
         // set the number of threads
         omp_set_num_threads(threads);
 
@@ -372,6 +373,8 @@ public:
 
         // initialize the feature indexer
         SpatialIndex<T> index(dataset, m_epsilon);
+        //CoverTree<T> *cTree = CoverTree<T>::from_dataset(dataset);
+        CoverTree<T> ct(dataset);
         // initialize the clusters array
         Clusters clusters(dataset.m_chunk[0], NOT_VISITED);
 
