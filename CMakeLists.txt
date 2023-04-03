@@ -10,7 +10,7 @@ ENABLE_LANGUAGE(CXX)
 SET(CMAKE_CXX_STANDARD 14)
 
 # set build options
-SET(CMAKE_CXX_FLAGS "-Ofast -Wall -Wextra -pthread")
+SET(CMAKE_CXX_FLAGS "-Ofast  -pthread")
 SET(CMAKE_CXX_FLAGS_DEBUG "-g")
 
 # add the include and source directories
