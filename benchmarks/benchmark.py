@@ -37,7 +37,7 @@ def run_benchmark(command, log_path):
 
 
 if __name__ == '__main__':
-    run_benchmark('./sklearn-dbscan.py {dataset} -e {eps} -m {min_points}', 'sklearn.log')
+#    run_benchmark('./sklearn-dbscan.py {dataset} -e {eps} -m {min_points}', 'sklearn.log')
     run_benchmark('../build/hpdbscan -i {dataset} --input-dataset DBSCAN -o output.h5 --output-dataset CLUSTERS -e {eps} -m {min_points}', 'hpdbscan.log')
     
 

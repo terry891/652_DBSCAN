@@ -25,9 +25,7 @@
 #include <parallel/algorithm>
 #include <vector>
 
-#ifdef WITH_OUTPUT
 #include <iostream>
-#endif
 
 #include "constants.h"
 #include "dataset.h"
@@ -98,6 +96,8 @@ private:
 
     void compute_space_dimensions() {
         const size_t dimensions = m_minimums.size();
+        //std::cout << "dimensions: " << dimensions << std::endl;
+        //std::cout << "m_minimums size: " << m_minimums.size() << std::endl; 
         const size_t bytes = m_cells.size() * dimensions;
         const T* end_point = static_cast<T*>(m_data.m_p) + bytes;
 
@@ -125,13 +125,16 @@ private:
         for (size_t i = 0; i < m_cell_dimensions.size(); ++i) {
             size_t cells = static_cast<size_t>(std::ceil((m_maximums[i] - m_minimums[i]) / m_epsilon)) + 1;
             m_cell_dimensions[i] = cells;
+            //std::cout << cells << " ";
             m_total_cells *= cells;
         }
+        //std::cout<<std::endl;
         m_last_cell = m_total_cells;
     }
 
     void swap_dimensions() {
         // fill the dimensions with an initially correct order
+        //std::cout << m_swapped_dimensions.size() << std::endl;
         std::iota(m_swapped_dimensions.begin(), m_swapped_dimensions.end(), 0);
         // swap the dimensions descending by their cell sizes
         std::sort(m_swapped_dimensions.begin(), m_swapped_dimensions.end(), [&] (size_t a, size_t b) {
@@ -139,6 +142,7 @@ private:
         });
         // determine the halo size
         m_halo = m_total_cells / m_cell_dimensions[m_swapped_dimensions.back()];
+        //std::cout << "m_halo: "  << m_halo << std::endl;
     }
 
     void compute_cells() {
@@ -152,16 +156,20 @@ private:
             size_t cell = 0;
             size_t accumulator = 1;
 
+            // separate into different cells
             for (size_t d : m_swapped_dimensions) {
                 size_t index = static_cast<size_t>(std::floor((point[d] - m_minimums[d]) / m_epsilon));
                 cell += index * accumulator;
                 accumulator *= m_cell_dimensions[d];
+                //std::cout <<"index: " << index << " cell: " << cell << " accum: " << accumulator << std::endl;
             }
 
             m_cells[i] = cell;
+            // histogram is a map<cell, size>
             ++histogram[cell];
         }
         m_cell_histogram.swap(histogram);
+        //std::cout << "histogram size: " << m_cell_histogram.size() << std::endl;
     }
 
     void compute_cell_index() {
@@ -170,6 +178,9 @@ private:
         // sum up the offset into the points array
         for (auto& cell : m_cell_histogram)
         {
+            // indx is Locator
+            // cell.second is number of cell in that bin
+            // accumulator is the start cell index for each bin
             auto& index  = m_cell_index[cell.first];
             index.first  = accumulator;
             index.second = cell.second;

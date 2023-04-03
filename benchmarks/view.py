@@ -1,7 +1,7 @@
 import h5py
 
 
-filename = 'test1.h5'
+filename = 'iris.h5'
 
 with h5py.File(filename, 'r') as f:
     print("Keys: %s" % list(f.keys())[0])
