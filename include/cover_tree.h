@@ -48,14 +48,14 @@ public:
     /*** Base to use for the calculations ***/
     static constexpr double base = 1.3;
     static constexpr int SIZE=2048;
-    //std::array<double,2048> compute_pow_table(){
-    //  std::array<double,2048> powdict{};
-    //  powdict[0] = 2.098975e-117;
-    //  for (int i = 1; i<2048; ++i)
-    //      powdict[i] = 1.3* powdict[i-1];
-    //  return powdict;
-    //}
-    //static double powdict[SIZE];
+    constexpr std::array<double,2048> compute_pow_table(){
+      std::array<double,2048> powdict{};
+      powdict[0] = 2.098975e-117;
+      for (int i = 1; i<2048; ++i)
+          powdict[i] = 1.3* powdict[i-1];
+      return powdict;
+    }
+    static constexpr double powdict[SIZE]=compute_pow_table();
 
 public:
     /*** structure for each node ***/
@@ -341,10 +341,6 @@ protected:
 /************************* Public API ***********************************************/
 public:
     CoverTree(Dataset& m_data){
-      //CoverTree<T>::powdict  = CoverTree<T>::compute_pow_table();
-      for(int i=0;i<SIZE;i++){
-        powdict[i] = std::pow(1.3, i-1024);
-      }
       std::vector<pointType> pList = from_dataset(m_data);
       int truncate = -1;
       int end = pList.size();
@@ -519,6 +515,7 @@ public:
     /*** Pretty print ***/
     //friend std::ostream& operator<<(std::ostream& os, const CoverTree& ct);
 };
+
 
 #endif //_COVER_TREE_H
 

@@ -13,7 +13,8 @@
 
 #include <cstdint>
 
-#include "hpdbscan.h"
+#include "hpdbscan.h" 
+#include "cover_tree.h"
 
 // explicit template instantiation
 template Clusters HPDBSCAN::cluster<uint8_t >(Dataset&, int);
@@ -28,3 +29,5 @@ template Clusters HPDBSCAN::cluster<int64_t>(Dataset&, int);
 
 template Clusters HPDBSCAN::cluster<float >(Dataset&, int);
 template Clusters HPDBSCAN::cluster<double>(Dataset&, int);
+
+//template double CoverTree<double>::powdict;

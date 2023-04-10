@@ -24,6 +24,10 @@
 
 #include "cxxopts.h"
 #include "hpdbscan.h"
+#include "cover_tree.h"
+
+template<typename T>
+constexpr double CoverTree<T>::powdict[2048];
 
 int main(int argc, char** argv) {
     #ifdef WITH_MPI
