@@ -27,9 +27,11 @@
 #include "cover_tree.h"
 
 template<typename T>
-constexpr double CoverTree<T>::powdict[2048];
+constexpr std::array<double,2048> CoverTree<T>::powdict;
+
 
 int main(int argc, char** argv) {
+    //std::cout << CoverTree<double>::powdict[0] << std::endl;
     #ifdef WITH_MPI
     int error, provided;
     error = MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);
