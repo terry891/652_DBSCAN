@@ -55,7 +55,7 @@ public:
     //      powdict[i] = 1.3* powdict[i-1];
     //  return powdict;
     //}
-    static double powdict[SIZE];
+    //static double powdict[SIZE];
 
 public:
     /*** structure for each node ***/
