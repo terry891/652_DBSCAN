@@ -372,9 +372,11 @@ public:
         #endif
 
         // initialize the feature indexer
+        CoverTree<T> ct(dataset);
+        std::cout << ct.count_points() << std::endl;
+        exit(0);
         SpatialIndex<T> index(dataset, m_epsilon);
         //CoverTree<T> *cTree = CoverTree<T>::from_dataset(dataset);
-        CoverTree<T> ct(dataset);
         // initialize the clusters array
         Clusters clusters(dataset.m_chunk[0], NOT_VISITED);
 
