@@ -24,51 +24,6 @@
 /******************************* Remove ***********************************************/
 
 
-bool CoverTree::remove(const pointType &p)
-{
-    bool ret_val = false;
-    // First find the point
-    std::pair<CoverTree::Node*, double> result(root, root->dist(p));
-    NearestNeighbour(root, result.second, p, result);
-
-    if (result.second<=0.0)
-    {   // point found
-        CoverTree::Node* node_p = result.first;
-        CoverTree::Node* parent_p = node_p->parent;
-        if (node_p == root)
-        {
-            std::cout << "Sorry can not delete root efficiently!" << std::endl;
-        }
-        else
-        {
-            // 1. Remove p from parent's list of child
-            unsigned num_children = parent_p->children.size();
-            for (unsigned i = 0; i < num_children; ++i)
-            {
-                if (parent_p->children[i]==node_p)
-                {
-                    parent_p->children[i] =  parent_p->children.back();
-                    parent_p->children.pop_back();
-                    break;
-                }
-
-            }
-
-            // 2. For each child q of p:
-            for(CoverTree::Node* q : *node_p)
-            {
-                CoverTree::insert(root, q);
-            }
-
-            //3. delete
-            delete node_p;
-
-            ret_val = true;
-        }
-    }
-    //calc_maxdist();
-    return ret_val;
-}
 
 
 /****************************** Nearest Neighbour *************************************/
