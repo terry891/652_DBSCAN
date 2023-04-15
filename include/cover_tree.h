@@ -199,7 +199,7 @@ protected:
       {
           Node* child = current->children[child_idx];
           double dist_child = dists[child_idx];
-          if (dist_child <= 0.0)
+          if (dist_child < 0.0)
           {
               // release read lock then enter child
               current->mut.unlock_shared();
@@ -407,7 +407,7 @@ public:
       root->maxdistUB = powdict[scale_val+1024];
       int run_till = 50000 < end ? 50000 : end;
       for (int i = 1; i < run_till; ++i){
-          //utils::progressbar(i, run_till);
+          utils::progressbar(i, run_till);
           if(!insert(pList[idx[i]]))
               std::cout << "Insert failed!!!" << std::endl;
       }
