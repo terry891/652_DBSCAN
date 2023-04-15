@@ -182,19 +182,11 @@ namespace utils
             // std::cout<< right << std::endl;
             // std::cout<<"in parallel add list 177" << std::endl;
             
-            std::cout<<"original check ";
-            std::cout<< pList[0].size() << std::endl;
-            std::cout<<"error check ";
-            std::cout<< pList[150].size() << std::endl;
-
-            std::cout<<"error check1 ";
-            std::cout<< pList[151].size() << std::endl;
             for(int i = left; i<right; ++i){
                 res += pList[i];
                 // std::cout<<"loop in progress ";
                 // std::cout<< i << std::endl;
             }
-            std::cout<<"out of the loop 180" << std::endl;
         }
 
     public:
@@ -217,9 +209,9 @@ namespace utils
         {
             if (right - left < 500000)
             {
-                std::cout<<"in parallel add list 201" << std::endl;
+                // std::cout<<"in parallel add list 201" << std::endl;
                 run();
-                std::cout<<"in parallel add list 201" << std::endl;
+                // std::cout<<"in parallel add list 201" << std::endl;
                 return 0;
             }
 
@@ -284,7 +276,7 @@ namespace utils
             if (right - left < 500000)
             {
                 run();
-                std::cout<<"in parallel add list 269" << std::endl;
+                // std::cout<<"in parallel add list 269" << std::endl;
                 return 0;
             }
 
