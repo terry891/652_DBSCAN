@@ -729,6 +729,7 @@ public:
             cells_in_lower_space = cells_in_current_space;
         }
 
+
         // copy the points from the neighboring cells over
         std::vector<size_t> neighboring_points;
         neighboring_points.reserve(number_of_points);
@@ -746,10 +747,15 @@ public:
         }
 
         return neighboring_points;
+        // 652MODIFICATION: return a covertree with data of all the neighboring_points
+        
     }
 
     Cluster region_query(const size_t point_index, const std::vector<size_t>& neighboring_points, const float EPS2,
                          const Clusters& clusters, std::vector<size_t>& min_points_area) const {
+      //652MODIFICATION: change the argument of region_query arguements: include covertree, Tree:node of base point to query neighbors
+      //for the function body: might implement sth similar to CoverTree::RangeNeighbors
+      //need to take care of neighbor_label and cluster_label
         const size_t dimensions = m_data.m_chunk[1];
         const T* point = static_cast<T*>(m_data.m_p) + point_index * dimensions;
         Cluster cluster_label = m_global_point_offset + point_index + 1;

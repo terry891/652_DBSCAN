@@ -414,7 +414,7 @@ public:
       utils::progressbar(run_till, run_till);
       std::cout<<std::endl;
 
-      std::cout << pList[0].rows() << ", " << pList.size() << std::endl;
+      //std::cout << pList[0].rows() << ", " << pList.size() << std::endl;
 
       utils::parallel_for_progressbar(50000,end,[&](int i)->void{
       //for (int i = 50000; i < end; ++i){
