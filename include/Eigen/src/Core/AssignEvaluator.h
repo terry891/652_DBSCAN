@@ -707,6 +707,14 @@ void resize_if_allowed(DstXprType &dst, const SrcXprType& src, const Functor &/*
 {
   EIGEN_ONLY_USED_FOR_DEBUG(dst);
   EIGEN_ONLY_USED_FOR_DEBUG(src);
+  // std::cout<<"dst rows ";
+  // std::cout<< dst.rows();
+  // std::cout<<" src rows ";
+  // std::cout<< src.rows();
+  // std::cout<<" dst cols ";
+  // std::cout<< dst.cols();
+  // std::cout<<" src cols ";
+  // std::cout<< src.cols()<< std::endl;
   eigen_assert(dst.rows() == src.rows() && dst.cols() == src.cols());
 }
 

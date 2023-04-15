@@ -373,9 +373,11 @@ public:
       int end = pList.size();
       int begin = 0;
 
+    //   std::cout<< pList.size() << std::endl;
+
       //1. Compute the mean of entire data
       pointType mx = utils::ParallelAddList(pList).get_result()/pList.size();
-
+      std::cout<<"inside of the constructor*************" << std::endl;
       //2. Compute distance of every point from the mean || Variance
       pointType dists = utils::ParallelDistanceComputeList(pList, mx).get_result();
 
@@ -429,8 +431,15 @@ public:
     static std::vector<pointType> from_dataset(Dataset& m_data){
       const size_t items = m_data.m_chunk[0];
       const size_t dimensions = m_data.m_chunk[1];
-    
-      std::vector<pointType> pList(items);
+
+        std::cout<< "items ";
+        std::cout<< items << std::endl;
+      
+        std::cout<< "dimensions ";
+        std::cout<< dimensions << std::endl;
+      std::vector<pointType> pList;
+        std::cout<< "plist size ";
+        std::cout<< pList.size() << std::endl;
       // pragma omp optimizations for parallel constructions
       for (size_t i=0;i<items;i++){
         const T* point = static_cast<T*>(m_data.m_p) + i * dimensions;
@@ -440,8 +449,10 @@ public:
           newPoint[d] = point[d];
         }
         pList.push_back(newPoint);
+        // std::cout<< "plist size ";
+        // std::cout<< pList.size() << std::endl;
       }
-    
+
       return pList;
     }
 

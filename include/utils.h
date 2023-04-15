@@ -174,8 +174,27 @@ namespace utils
         void run()
         {
             res = Eigen::VectorXd::Zero(pList[0].size());
-            for(int i = left; i<right; ++i)
+            // std::cout<<"len check ";
+            // std::cout<< pList.size() << std::endl;
+            // std::cout<<"left check ";
+            // std::cout<< left << std::endl;
+            // std::cout<<"right check ";
+            // std::cout<< right << std::endl;
+            // std::cout<<"in parallel add list 177" << std::endl;
+            
+            std::cout<<"original check ";
+            std::cout<< pList[0].size() << std::endl;
+            std::cout<<"error check ";
+            std::cout<< pList[150].size() << std::endl;
+
+            std::cout<<"error check1 ";
+            std::cout<< pList[151].size() << std::endl;
+            for(int i = left; i<right; ++i){
                 res += pList[i];
+                // std::cout<<"loop in progress ";
+                // std::cout<< i << std::endl;
+            }
+            std::cout<<"out of the loop 180" << std::endl;
         }
 
     public:
@@ -198,12 +217,14 @@ namespace utils
         {
             if (right - left < 500000)
             {
+                std::cout<<"in parallel add list 201" << std::endl;
                 run();
+                std::cout<<"in parallel add list 201" << std::endl;
                 return 0;
             }
 
             int split = (right - left) / 2;
-
+            
             ParallelAddList* t1 = new ParallelAddList(left, left + split, pList);
             ParallelAddList* t2 = new ParallelAddList(left + split, right, pList);
 
@@ -263,6 +284,7 @@ namespace utils
             if (right - left < 500000)
             {
                 run();
+                std::cout<<"in parallel add list 269" << std::endl;
                 return 0;
             }
 
