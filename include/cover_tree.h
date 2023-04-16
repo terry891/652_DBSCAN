@@ -176,7 +176,7 @@ protected:
     std::SHARED_MUTEX_TYPE global_mut;  // lock for changing the root
 
     /*** Insert point or node at current node ***/
-    bool insert(Node* current, const pointType& p){
+    bool insert(Node* current, const pointType& p, size_t pointID){
       bool result = false;
       if (truncate_level > 0 && current->level < max_scale-truncate_level)
           return false;
@@ -213,7 +213,7 @@ protected:
               if (child->maxdistUB < dist_child)
                   child->maxdistUB = dist_child;
               current->mut.unlock_shared();
-              result = insert(child, p);
+              result = insert(child, p, pointID);
               flag = false;
               break;
           }
@@ -228,7 +228,7 @@ protected:
           if (num_children==current->children.size())
           {
               int new_id = ++N;
-              current->setChild(p, new_id);
+              current->setChild(p, pointID);
               result = true;
               current->mut.unlock();
   
@@ -241,7 +241,7 @@ protected:
           else
           {
               current->mut.unlock();
-              result = insert(current, p);
+              result = insert(current, p, pointID);
           }
       }
       return result;
@@ -367,8 +367,9 @@ protected:
 
 /************************* Public API ***********************************************/
 public:
-    CoverTree(Dataset& m_data){
-      std::vector<pointType> pList = from_dataset(m_data);
+    //CoverTree(Dataset& m_data){
+    CoverTree(std::vector<pointType>& pList, const std::vector<size_t> pIdxList){
+      //std::vector<pointType> pList = from_dataset(m_data);
       int truncate = -1;
       int end = pList.size();
       int begin = 0;
@@ -405,10 +406,11 @@ public:
       root->_p = temp;
       root->level = scale_val; //-1000;
       root->maxdistUB = powdict[scale_val+1024];
+      root->ID = pIdxList[idx[0]];
       int run_till = 50000 < end ? 50000 : end;
       for (int i = 1; i < run_till; ++i){
           utils::progressbar(i, run_till);
-          if(!insert(pList[idx[i]]))
+          if(!insert(pList[idx[i]], pIdxList[idx[i]]))
               std::cout << "Insert failed!!!" << std::endl;
       }
       utils::progressbar(run_till, run_till);
@@ -416,10 +418,11 @@ public:
 
       //std::cout << pList[0].rows() << ", " << pList.size() << std::endl;
 
+      // TODO: why insert twice here?
       utils::parallel_for_progressbar(50000,end,[&](int i)->void{
       //for (int i = 50000; i < end; ++i){
           //utils::progressbar(i, end-50000);
-          if(!insert(pList[idx[i]]))
+          if(!insert(pList[idx[i]], pIdxList[idx[i]]))
               std::cout << "Insert failed!!!" << std::endl;
       });
     }
@@ -432,14 +435,7 @@ public:
       const size_t items = m_data.m_chunk[0];
       const size_t dimensions = m_data.m_chunk[1];
 
-        // std::cout<< "items ";
-        // std::cout<< items << std::endl;
-      
-        // std::cout<< "dimensions ";
-        // std::cout<< dimensions << std::endl;
       std::vector<pointType> pList;
-        // std::cout<< "plist size ";
-        // std::cout<< pList.size() << std::endl;
       // pragma omp optimizations for parallel constructions
       for (size_t i=0;i<items;i++){
         const T* point = static_cast<T*>(m_data.m_p) + i * dimensions;
@@ -449,15 +445,15 @@ public:
           newPoint[d] = point[d];
         }
         pList.push_back(newPoint);
-        // std::cout<< "plist size ";
-        // std::cout<< pList.size() << std::endl;
       }
 
       return pList;
     }
 
+    Node* getRoot() const {return root;}
+
     /*** Insert point p into the cover tree ***/
-    bool insert(const pointType& p){
+    bool insert(const pointType& p, size_t pointID){
       bool result = false;
       id_valid = false;
       global_mut.lock_shared();
@@ -492,6 +488,7 @@ public:
           }
           ++N;
           CoverTree::Node* temp = new CoverTree::Node;
+          temp->ID = pointID;
           temp->_p = p;
           temp->level = root->level + 1;
           temp->parent = NULL;
@@ -508,7 +505,7 @@ public:
       else
       {
           //root->tempDist = root->dist(p);
-          result = insert(root, p);
+          result = insert(root, p, pointID);
       }
       global_mut.unlock_shared();
       return result;
@@ -645,6 +642,7 @@ public:
     }
 
     /*** Range search ***/
+    /*
     std::vector<std::pair<CoverTree::Node*, double>> rangeNeighbours(const pointType &queryPt, double range = 1.0) const{
       // List of nearest neighbors in the range
       std::vector<std::pair<CoverTree::Node*, double>> nnList;
@@ -655,13 +653,13 @@ public:
 
       return nnList;
     }
+    */
 
-    void rangeNeighbours(Node* current, double dist_current, const pointType &p, double range, std::vector<std::pair<CoverTree::Node*, double>>& nnList) const{
+    void rangeNeighbours(Node* current, double dist_current, const pointType &p, double range, std::vector<size_t>& minPointList) const{
       // If the current node is eligible to get into the list
       if (dist_current < range)
       {
-          std::pair<CoverTree::Node*, double> temp(current, dist_current);
-          nnList.push_back(temp);
+          minPointList.push_back(current->ID);
       }
 
       // Sort the children
@@ -679,7 +677,7 @@ public:
           Node* child = current->children[child_idx];
           double dist_child = dists[child_idx];
           if (range > dist_child - child->maxdistUB)
-              rangeNeighbours(child, dist_child, p, range, nnList);
+              rangeNeighbours(child, dist_child, p, range, minPointList);
       }
     }
 

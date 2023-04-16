@@ -29,6 +29,7 @@
 
 #include "constants.h"
 #include "dataset.h"
+#include "cover_tree.h"
 
 #ifdef WITH_MPI
 #include <mpi.h>
@@ -748,18 +749,52 @@ public:
 
         return neighboring_points;
         // 652MODIFICATION: return a covertree with data of all the neighboring_points
-        
     }
 
-    Cluster region_query(const size_t point_index, const std::vector<size_t>& neighboring_points, const float EPS2,
+    std::vector<pointType> getpList(const std::vector<size_t>& neighboring_points) const{
+      std::vector<pointType> pList;
+      const size_t dimensions = m_data.m_chunk[1];
+
+      #pragma omp parallel for
+      for (size_t neighbor : neighboring_points){
+        const T* point = static_cast<T*>(m_data.m_p) + neighbor * dimensions;
+    
+        pointType newPoint = pointType(dimensions);
+        for(size_t d=0;d<dimensions;d++){
+          newPoint[d] = point[d];
+        }
+        pList.push_back(newPoint);
+      }
+
+      return pList;
+    }
+
+    //Cluster region_query(const size_t point_index, const std::vector<size_t>& neighboring_points, const float EPS2,
+    Cluster region_query(const size_t point_index, const CoverTree<T>& ct, 
                          const Clusters& clusters, std::vector<size_t>& min_points_area) const {
       //652MODIFICATION: change the argument of region_query arguements: include covertree, Tree:node of base point to query neighbors
       //for the function body: might implement sth similar to CoverTree::RangeNeighbors
       //need to take care of neighbor_label and cluster_label
         const size_t dimensions = m_data.m_chunk[1];
         const T* point = static_cast<T*>(m_data.m_p) + point_index * dimensions;
+        pointType cur_point = pointType(dimensions);
+        for (size_t d =0; d < dimensions;d++){
+          cur_point[d]= point[d];
+        }
         Cluster cluster_label = m_global_point_offset + point_index + 1;
 
+        ct.rangeNeighbours(ct.getRoot(), ct.getRoot()->dist(cur_point), cur_point, m_epsilon, min_points_area);
+
+        for (size_t neighbor : min_points_area){
+          const Cluster neighbor_label = clusters[neighbor];
+
+          if (neighbor_label != NOT_VISITED and neighbor_label < 0) {
+              cluster_label = std::min(cluster_label, std::abs(neighbor_label));
+          }
+          
+        }
+
+        /*
         // iterate through all neighboring points and check whether they are in range
         for (size_t neighbor: neighboring_points) {
             double offset = 0.0;
@@ -781,6 +816,7 @@ public:
                 }
             }
         }
+        */
 
         return cluster_label;
     }
