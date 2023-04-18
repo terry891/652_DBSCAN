@@ -1,8 +1,8 @@
 import numpy as np
 import h5py
 
-nPoints = [100, 100, 100]
-nDimensions = [200, 500, 1000]
+nPoints = [200, 200, 200]
+nDimensions = [25, 30, 40]
 nClusters = [10, 10, 10]
 
 for (ps, ds, k) in zip(nPoints, nDimensions, nClusters):
