@@ -6,10 +6,10 @@ import sys
 import time
 
 DATASET_PARAMETERS = {# eps,  min_points
-    #'bremen_small.h5':     (100,  312),
-    'iris.h5':              (0.32,  3),
-    #'twitter_small.h5':    (0.01, 40),
-    #'test1.h5':            (0.01, 40),
+    #'tests/bremen_small.h5':     (100,  312),
+    'tests/iris.h5':              (0.32,  3),
+    #'tests/twitter_small.h5':    (0.01, 40),
+    #'tests/test1.h5':            (0.01, 40),
 }
 TRIALS = 10
 
