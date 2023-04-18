@@ -1,10 +1,12 @@
 import numpy as np
 import h5py
 
-numPts = 20
-numDims = 3
-numK = 4
-filename = "test1.h5"
+numPts = 50000
+numDims = 100
+numK = 20
+filename = f"test_{numPts*numK}p_{numDims}d_{numK}k.h5"
+
+
 
 means = 200 * np.random.rand(numK, numDims) - 100
 x=[]
